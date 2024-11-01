@@ -1,8 +1,7 @@
-import React from 'react';
-import { set } from 'lodash-es';
-import { useRoutes } from 'react-router-dom';
-
-import type { RouteObject } from 'react-router-dom';
+import React from "react";
+import { set } from "lodash-es";
+import { useRoutes } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 
 /**
  * 根据 pages 目录生成路径配置
@@ -13,11 +12,11 @@ function generatePathConfig(): Record<string, any> {
   const pathConfig = {};
   Object.keys(modules).forEach((filePath) => {
     const routePath = filePath
-      .replace(`/src/pages/`, '')
-      .replace(/.tsx?/, '')
-      .replace(/\$\[([\w-]+)]/, ':$1')
-      .replace(/\$([\w-]+)/, '$1')
-      .split('/');
+      .replace(`/src/pages/`, "")
+      .replace(/.tsx?/, "")
+      .replace(/\$\[([\w-]+)]/, ":$1")
+      .replace(/\$([\w-]+)/, "$1")
+      .split("/");
     set(pathConfig, routePath, modules[filePath]);
   });
   return pathConfig;
@@ -26,7 +25,9 @@ function generatePathConfig(): Record<string, any> {
 /**
  * 为动态 import 包裹 lazy 和 Suspense
  */
-function wrapSuspense(importer: () => Promise<{ default: React.ComponentType }>) {
+function wrapSuspense(
+  importer: () => Promise<{ default: React.ComponentType }>,
+) {
   if (!importer) {
     return undefined;
   }
@@ -43,8 +44,8 @@ function wrapSuspense(importer: () => Promise<{ default: React.ComponentType }>)
  */
 function mapPathConfigToRoute(cfg: Record<string, any>): RouteObject[] {
   return Object.entries(cfg).map(([routePath, child]) => {
-    if (typeof child === 'function') {
-      const isIndex = routePath === 'index';
+    if (typeof child === "function") {
+      const isIndex = routePath === "index";
       return {
         index: isIndex,
         path: isIndex ? undefined : routePath,
@@ -64,7 +65,7 @@ function generateRouteConfig(): RouteObject[] {
   const { $, ...pathConfig } = generatePathConfig();
   return [
     {
-      path: '/',
+      path: "/",
       element: wrapSuspense($),
       children: mapPathConfigToRoute(pathConfig),
     },
